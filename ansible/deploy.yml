@@ -16,16 +16,16 @@
         mode: '0644'
         
 
-    # - name: Restart Flask app 
-    #   shell: |
-    #     pkill -f "python3 app.py" || true
-    #     nohup python3 /home/ubuntu/project/app/app.py > /home/ubuntu/project/app.log 2>&1 &
-    #   args:
-    #     executable: /bin/bash
-    - name: Restart Flask app (non-blocking)
+    - name: Restart Flask app 
       shell: |
-        pgrep -f "python3 app.py" && pkill -f "python3 app.py"
-        nohup python3 /home/ubuntu/project/app/app.py > /home/ubuntu/project/app.log 2>&1 &
+        pkill -f "python3 app.py" || true
+        nohup python3 /home/ubuntu/project/app/app.py > /home/ubuntu/project/app/app.log 2>&1 &
       args:
         executable: /bin/bash
-      ignore_errors: true
+    # - name: Restart Flask app (non-blocking)
+    #   shell: |
+    #     pgrep -f "python3 app.py" && pkill -f "python3 app.py"
+    #     nohup python3 /home/ubuntu/project/app/app.py > /home/ubuntu/project/app/app.log 2>&1 &
+    #   args:
+    #     executable: /bin/bash
+    #   ignore_errors: true
