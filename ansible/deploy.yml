@@ -19,6 +19,6 @@
     - name: Restart Flask app (if using systemd)
       shell: |
         pkill -f "python3 app.py" || true
-        nohup python3 /home/ubuntu/project/app.py > /home/ubuntu/app.log 2>&1 &
+        nohup python3 /home/ubuntu/project/app/app.py > /home/ubuntu/app.log 2>&1 &
       args:
         executable: /bin/bash
