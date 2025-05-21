@@ -11,7 +11,7 @@
 
     - name: Copy best model to production
       copy:
-        src: models/best_model.pkl
+        src: ../models/best_model.pkl
         dest: /home/ubuntu/project/models/best_model.pkl
         mode: '0644'
         
