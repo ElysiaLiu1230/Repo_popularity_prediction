@@ -11,9 +11,10 @@
 
     - name: Copy best model to production
       copy:
-        src: models/best_model.pkl
+        src: /home/ubuntu/project/models/best_model.pkl
         dest: /home/ubuntu/project/models/best_model.pkl
         mode: '0644'
+        remote_src: yes
 
     - name: Restart Flask app (if using systemd)
       shell: |
