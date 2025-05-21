@@ -1,0 +1,23 @@
+---
+- name: Deploy best model to production
+  hosts: prod
+  become: false
+  tasks:
+    - name: Ensure target directory exists
+      file:
+        path: /home/ubuntu/project/models
+        state: directory
+        mode: '0755'
+
+    - name: Copy best model to production
+      copy:
+        src: models/best_model.pkl
+        dest: /home/ubuntu/project/models/best_model.pkl
+        mode: '0644'
+
+    - name: Restart Flask app (if using systemd)
+      shell: |
+        pkill -f "python3 app.py" || true
+        nohup python3 /home/ubuntu/project/app.py > /home/ubuntu/app.log 2>&1 &
+      args:
+        executable: /bin/bash
