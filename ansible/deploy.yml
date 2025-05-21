@@ -16,9 +16,16 @@
         mode: '0644'
         
 
-    - name: Restart Flask app (if using systemd)
+    # - name: Restart Flask app 
+    #   shell: |
+    #     pkill -f "python3 app.py" || true
+    #     nohup python3 /home/ubuntu/project/app/app.py > /home/ubuntu/project/app.log 2>&1 &
+    #   args:
+    #     executable: /bin/bash
+    - name: Restart Flask app (non-blocking)
       shell: |
-        pkill -f "python3 app.py" || true
+        pgrep -f "python3 app.py" && pkill -f "python3 app.py"
         nohup python3 /home/ubuntu/project/app/app.py > /home/ubuntu/project/app.log 2>&1 &
       args:
         executable: /bin/bash
+      ignore_errors: true
