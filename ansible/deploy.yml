@@ -29,7 +29,7 @@
         pkill -f "python3 app.py" || true
         sleep 2
         nohup python3 /home/ubuntu/project/app/app.py > /home/ubuntu/project/app/app.log 2>&1 &
-        sleep 2
+        sleep 5
         pgrep -f "python3 app.py" || exit 1
       args:
         executable: /bin/bash
