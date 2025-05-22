@@ -22,6 +22,10 @@ df.drop(columns=[col for col in drop_cols if col in df.columns], inplace=True, e
 X = df.drop(columns=[target])
 y = df[target]
 
+# Print the list of features being used
+print("\nFeatures used for training:")
+print(X.columns.tolist())
+
 # Identify categorical and numeric columns
 categorical_cols = X.select_dtypes(include=["object", "bool"]).columns.tolist()
 numerical_cols = X.select_dtypes(include=["int64", "float64"]).columns.tolist()
