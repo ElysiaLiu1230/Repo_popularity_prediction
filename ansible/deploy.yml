@@ -16,20 +16,32 @@
         mode: '0644'
         
 
-    # - name: Restart Flask app 
+   
+    # - name: Restart Flask app (0)
     #   shell: |
     #     pkill -f "python3 app.py" || true
     #     sleep 2
     #     nohup python3 /home/ubuntu/project/app/app.py > /home/ubuntu/project/app/app.log 2>&1 &
+    #     sleep 5
+    #     pgrep -f "python3 app.py" || exit 1
     #   args:
     #     executable: /bin/bash
-   
-    - name: Restart Flask app (0)
+    - name: Restart Flask app (robust)
       shell: |
-        pkill -f "python3 app.py" || true
+        # Kill any existing Flask processes
+        fuser -k 5000/tcp || true
         sleep 2
+
+        # Start Flask app in background with nohup
         nohup python3 /home/ubuntu/project/app/app.py > /home/ubuntu/project/app/app.log 2>&1 &
+
+        # Wait for Flask to start
         sleep 5
-        pgrep -f "python3 app.py" || exit 1
+
+        # Check if running
+        pgrep -f "python3 /home/ubuntu/project/app/app.py" || {
+          echo "❌ Flask failed to start. Check app.log."
+          exit 1
+        }
       args:
         executable: /bin/bash
