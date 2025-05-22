@@ -24,7 +24,7 @@
     #   args:
     #     executable: /bin/bash
    
-    - name: Restart Flask app 
+    - name: Restart Flask app (0)
       shell: |
         pkill -f "python3 app.py" || true
         sleep 2
