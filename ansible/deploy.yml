@@ -26,7 +26,7 @@
     #     pgrep -f "python3 app.py" || exit 1
     #   args:
     #     executable: /bin/bash
-    - name: Restart Flask app (robust)
+    - name: Restart Flask app 
       shell: |
         # Kill any existing Flask processes
         fuser -k 5000/tcp || true
@@ -40,7 +40,7 @@
 
         # Check if running
         pgrep -f "python3 /home/ubuntu/project/app/app.py" || {
-          echo "❌ Flask failed to start. Check app.log."
+          echo "Flask failed to start. Check app.log."
           exit 1
         }
       args:
