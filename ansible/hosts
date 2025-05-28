@@ -1,5 +1,11 @@
 [dev]
 localhost ansible_connection=local
 
+[test3]
+130.238.27.93 ansible_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file=~/.ssh/Group11_key.pem
+
 [prod]
 130.238.27.41 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/Group11_key.pem
+
+[test2]
+130.238.27.51 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/Group11_key.pem

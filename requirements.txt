@@ -1,7 +1,0 @@
-pandas
-scikit-learn
-requests
-matplotlib
-flask
-joblib
-ansible

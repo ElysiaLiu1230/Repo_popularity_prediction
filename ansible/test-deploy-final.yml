@@ -1,0 +1,108 @@
+
+---
+- name: Deploy Flask GitHub Stars Predictor API to Production
+  hosts: test2
+  become: true
+
+  vars:
+    app_dir: /opt/github-stars-api
+    image_name: github-stars-predictor-app
+    container_name: github-stars-predictor
+
+  tasks:
+    # Install system packages
+    - name: Install apt dependencies
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+        state: present
+        update_cache: yes
+
+    # Add Docker GPG key
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    # Add Docker repo
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    # Install Docker CE
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: yes
+
+    # Ensure Docker is running
+    - name: Start and enable Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+    
+    # Install Docker Python SDK
+    - name: Install Docker SDK for Python (docker module)
+      pip:
+        name: docker
+        executable: pip3
+          
+    # Ensure remote app directory exists
+    - name: Ensure app directory exists
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+
+    # Copy Dockerfile and requirements.txt to server root
+    - name: Copy Docker directory contents (Dockerfile + requirements.txt) to server
+      copy:
+        src: ../docker/
+        dest: "{{ app_dir }}"
+        mode: '0755'
+
+    # Copy app directory to server
+    - name: Copy app directory to server
+      copy:
+        src: ../app/
+        dest: "{{ app_dir }}/app"
+        mode: '0755'
+
+    # Copy models directory to server
+    - name: Copy models directory to server
+      copy:
+        src: ../models/
+        dest: "{{ app_dir }}/models"
+        mode: '0755'
+
+    # Build Docker image on the server
+    - name: Build Docker image
+      docker_image:
+        name: "{{ image_name }}"
+        tag: latest
+        build:
+          path: "{{ app_dir }}"
+
+    # Stop and remove old container if running
+    - name: Stop and remove old container if running
+      docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        force_kill: true
+
+    # Run new Docker container
+    - name: Run new Docker container
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}:latest"
+        state: started
+        restart_policy: always
+        ports:
+          - "5000:5000"
+
